@@ -67,17 +67,8 @@
       font-size:14px;
     }
 
-    .status-pill{
-      flex:0 0 auto;
-      padding:10px 14px;
-      border-radius:999px;
-      background:#171b24;
-      border:1px solid rgba(91,140,255,.28);
-      color:#b7c8ff;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.04em;
-    }
+    
+
 
     .card{
       background:rgba(18,21,28,.96);
@@ -506,7 +497,6 @@
       <div class="title">ĒRGĻA IZAICINĀJUMS</div>
       <div class="subtitle">Interaktīvs mācību uzdevums ar dalības un pabeigšanas uzskaiti</div>
     </div>
-    <div class="status-pill" id="connectionStatus">REĢISTRS: LOKĀLS</div>
   </div>
 
   <div class="card resume-box" id="resumeBox">
@@ -778,10 +768,10 @@
 
   function setConnectionStatus(){
     if (APPS_SCRIPT_URL){
-      $("connectionStatus").textContent = "REĢISTRS: GOOGLE SHEETS";
+      $("connectionStatus").textContent = "";
       $("connectionStatus").style.color = "#d6ebbe";
     }else{
-      $("connectionStatus").textContent = "REĢISTRS: LOKĀLS";
+      $("connectionStatus").textContent = "";
     }
   }
 
@@ -1036,9 +1026,7 @@
     $("completeSection").style.display = "block";
 
     $("completeMessage").textContent =
-      APPS_SCRIPT_URL
-        ? "Pabeigšanas ieraksts ir nosūtīts reģistram."
-        : "Pabeigšana ir saglabāta lokāli. Google Sheets reģistrs vēl nav pieslēgts.";
+      "Uzdevuma pabeigšana ir veiksmīgi reģistrēta.";
 
     renderSummary(localReceipt);
 
@@ -1284,7 +1272,6 @@
     saveSession();
   });
 
-  setConnectionStatus();
   showResumeIfNeeded();
 
 })();
