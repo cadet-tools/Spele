@@ -438,6 +438,63 @@
       to{transform:scale(1);opacity:1}
     }
 
+  
+    .paste-zone{
+      margin-top:14px;
+      min-height:130px;
+      border:1px dashed #4a5568;
+      border-radius:12px;
+      background:#0d1118;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      color:#98a2b3;
+      outline:none;
+      transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+      cursor:text;
+    }
+
+    .paste-zone:focus,
+    .paste-zone.active{
+      border-color:#5b8cff;
+      background:#101725;
+      box-shadow:0 0 0 4px rgba(91,140,255,.10);
+    }
+
+    .paste-zone strong{
+      display:block;
+      color:#eef2f8;
+      margin-bottom:6px;
+      font-size:15px;
+    }
+
+    .paste-zone .paste-hint{
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .proof-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .proof-badge{
+      display:none;
+      margin-top:10px;
+      padding:9px 11px;
+      border-radius:9px;
+      background:#172033;
+      border:1px solid #2e466f;
+      color:#bdd0ff;
+      font-size:12px;
+      font-weight:700;
+    }
+
   </style>
 </head>
 
@@ -568,10 +625,30 @@
 
         <div class="upload">
           <label for="proofFile">Pabeigšanas ekrānuzņēmums *</label>
+
           <input id="proofFile" type="file" accept="image/*">
+
           <div class="small" style="margin-top:8px">
-            Pievieno ekrānuzņēmumu, kur redzams spēles beigu / rezultāta ekrāns.
+            Vari izvēlēties failu vai ielīmēt ekrānuzņēmumu tieši no starpliktuves.
           </div>
+
+          <div
+            id="pasteZone"
+            class="paste-zone"
+            tabindex="0"
+            role="button"
+            aria-label="Ielīmē ekrānuzņēmumu ar Ctrl+V">
+            <strong>IELĪMĒ EKRĀNUZŅĒMUMU</strong>
+            <div class="paste-hint">
+              1. Uztaisi ekrānuzņēmumu ar <b>Win + Shift + S</b><br>
+              2. Nospied šeit un tad <b>Ctrl + V</b>
+            </div>
+          </div>
+
+          <div class="proof-badge" id="proofBadge">
+            ✓ Ekrānuzņēmums pievienots
+          </div>
+
           <img id="preview" alt="Ekrānuzņēmuma priekšskatījums">
         </div>
       </div>
@@ -611,7 +688,7 @@
     <div class="error-modal">
       <div class="error-icon">!</div>
       <h3 id="screenshotModalTitle">NEPIECIEŠAMS EKRĀNUZŅĒMUMS</h3>
-      <p>Lai pabeigtu uzdevumu, vispirms pievieno ekrānuzņēmumu, kur redzams spēles beigu vai rezultāta ekrāns.</p>
+      <p>Lai pabeigtu uzdevumu, vispirms pievieno ekrānuzņēmumu — izvēlies attēla failu vai ielīmē to ar Ctrl+V.</p>
       <button type="button" class="btn btn-modal" id="closeScreenshotModal">SAPRATU</button>
     </div>
   </div>
@@ -645,6 +722,7 @@
   let timerId = null;
   let lastTick = Date.now();
   let receipt = null;
+  let pastedProofFile = null;
 
   const $ = (id) => document.getElementById(id);
 
@@ -886,7 +964,7 @@
   async function finishSession(){
     if (!session) return;
 
-    const proof = $("proofFile").files[0];
+    const proof = pastedProofFile || $("proofFile").files[0];
 
     if (!$("finishedAll").checked){
       alert("Apstiprini, ka esi pabeidzis/-usi uzdevumu.");
@@ -1036,6 +1114,51 @@
 
 
 
+
+  function setProofFromFile(file){
+    if (!file || !file.type || !file.type.startsWith("image/")) return false;
+
+    pastedProofFile = file;
+
+    const reader = new FileReader();
+    reader.onload = function(){
+      $("preview").src = reader.result;
+      $("preview").style.display = "block";
+      $("proofBadge").style.display = "block";
+      $("pasteZone").classList.add("active");
+      $("pasteZone").querySelector("strong").textContent = "EKRĀNUZŅĒMUMS IELĪMĒTS";
+      $("pasteZone").querySelector(".paste-hint").innerHTML =
+        "Ja nepieciešams, vari ielīmēt citu attēlu ar <b>Ctrl + V</b>.";
+    };
+    reader.readAsDataURL(file);
+
+    return true;
+  }
+
+  function handlePasteEvent(event){
+    const items = event.clipboardData && event.clipboardData.items
+      ? Array.from(event.clipboardData.items)
+      : [];
+
+    const imageItem = items.find(item => item.type && item.type.startsWith("image/"));
+
+    if (!imageItem) return;
+
+    event.preventDefault();
+
+    const blob = imageItem.getAsFile();
+    if (!blob) return;
+
+    const ext = blob.type === "image/jpeg" ? "jpg" : "png";
+    const file = new File(
+      [blob],
+      "ekranuznemums-" + Date.now() + "." + ext,
+      {type: blob.type || "image/png"}
+    );
+
+    setProofFromFile(file);
+  }
+
   function showScreenshotModal(){
     $("screenshotModal").classList.add("show");
     $("closeScreenshotModal").focus();
@@ -1043,7 +1166,7 @@
 
   function hideScreenshotModal(){
     $("screenshotModal").classList.remove("show");
-    $("proofFile").focus();
+    $("pasteZone").focus();
   }
 
   /* ============================================================
@@ -1078,20 +1201,40 @@
     const file = this.files[0];
 
     if (!file){
-      $("preview").style.display = "none";
-      $("preview").removeAttribute("src");
+      if (!pastedProofFile){
+        $("preview").style.display = "none";
+        $("preview").removeAttribute("src");
+        $("proofBadge").style.display = "none";
+      }
       validateFinish();
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(){
-      $("preview").src = reader.result;
-      $("preview").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-
+    pastedProofFile = null;
+    setProofFromFile(file);
     validateFinish();
+  });
+
+  $("pasteZone").addEventListener("paste",handlePasteEvent);
+
+  // Ērtībai: ja pabeigšanas sadaļā tiek nospiests Ctrl+V,
+  // pieņemam ekrānuzņēmumu arī tad, ja fokuss nav tieši ielīmēšanas laukā.
+  document.addEventListener("paste",function(event){
+    const gameVisible = $("gameSection").style.display === "block";
+    if (!gameVisible) return;
+
+    if (event.target === $("pasteZone")) return;
+
+    const items = event.clipboardData && event.clipboardData.items
+      ? Array.from(event.clipboardData.items)
+      : [];
+
+    const hasImage = items.some(item => item.type && item.type.startsWith("image/"));
+    if (hasImage) handlePasteEvent(event);
+  });
+
+  $("pasteZone").addEventListener("click",function(){
+    this.focus();
   });
 
   $("finishBtn").addEventListener("click",finishSession);
