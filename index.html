@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ērgļa izaicinājums — mācību uzdevums</title>
+
+  <style>
+    :root{
+      --bg:#0b0e0f;
+      --panel:#111713;
+      --panel2:#171d19;
+      --line:#2a332d;
+      --text:#f4f7f5;
+      --muted:#aeb8b1;
+      --accent:#9bad7a;
+      --accent2:#c1d29d;
+      --danger:#d75c50;
+      --warn:#d3a94f;
+      --ok:#7fb06f;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    button,input,select,textarea{font:inherit}
+
+    .page{
+      width:100%;
+      max-width:1500px;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    .topbar{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:space-between;
+      padding:20px 24px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-bottom:3px solid var(--accent);
+      border-radius:16px;
+      margin-bottom:16px;
+    }
+
+    .title{
+      font-size:clamp(24px,4vw,36px);
+      font-weight:800;
+      letter-spacing:.5px;
+    }
+
+    .subtitle{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .status-pill{
+      flex:0 0 auto;
+      padding:9px 13px;
+      border-radius:999px;
+      background:#202822;
+      border:1px solid #344137;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      margin-bottom:16px;
+    }
+
+    .card-head{
+      padding:18px 22px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .card-head h2{
+      margin:0;
+      font-size:20px;
+    }
+
+    .card-head p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .card-body{padding:22px}
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    label{
+      display:block;
+      color:#dde5df;
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:7px;
+    }
+
+    input[type="text"],
+    input[type="number"]{
+      width:100%;
+      min-height:46px;
+      padding:11px 12px;
+      color:var(--text);
+      background:#0e1310;
+      border:1px solid #344137;
+      border-radius:9px;
+      outline:none;
+    }
+
+    input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(155,173,122,.14);
+    }
+
+    .checkline{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin-top:16px;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .checkline input{
+      width:18px;
+      height:18px;
+      margin-top:1px;
+      accent-color:var(--accent);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .btn{
+      min-height:44px;
+      padding:11px 18px;
+      border:0;
+      border-radius:9px;
+      cursor:pointer;
+      font-weight:800;
+      transition:.15s ease;
+    }
+
+    .btn:hover:not(:disabled){transform:translateY(-1px)}
+
+    .btn:disabled{
+      cursor:not-allowed;
+      opacity:.45;
+    }
+
+    .btn-primary{
+      background:var(--accent);
+      color:#101410;
+    }
+
+    .btn-secondary{
+      background:#273029;
+      color:#f1f5f2;
+      border:1px solid #3c493f;
+    }
+
+    .btn-danger{
+      background:#4a2523;
+      color:#ffd9d5;
+      border:1px solid #6c3430;
+    }
+
+    .notice{
+      padding:13px 15px;
+      border-radius:10px;
+      font-size:14px;
+      line-height:1.5;
+      margin-bottom:14px;
+      background:#182019;
+      border:1px solid #334037;
+      color:#d9e1db;
+    }
+
+    .notice.warn{
+      background:#241f13;
+      border-color:#514421;
+      color:#ead9aa;
+    }
+
+    .notice.ok{
+      background:#162218;
+      border-color:#315036;
+      color:#cce8d0;
+    }
+
+    .resume-box{display:none}
+
+    #gameSection{display:none}
+
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+      padding:14px;
+      background:var(--panel2);
+      border-bottom:1px solid var(--line);
+    }
+
+    .metric{
+      min-width:0;
+      padding:12px;
+      border-radius:10px;
+      background:#0f1411;
+      border:1px solid #2e3931;
+    }
+
+    .metric .k{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      color:#8f9d93;
+      margin-bottom:6px;
+    }
+
+    .metric .v{
+      font-size:16px;
+      font-weight:800;
+      overflow-wrap:anywhere;
+    }
+
+    .game-wrap{
+      background:#000;
+      padding:10px;
+    }
+
+    iframe{
+      width:100%;
+      height:820px;
+      border:0;
+      display:block;
+      background:#fff;
+      border-radius:8px;
+    }
+
+    .progress-area{
+      padding:14px 18px;
+      background:var(--panel2);
+      border-top:1px solid var(--line);
+    }
+
+    .progress-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .progress{
+      height:12px;
+      border-radius:999px;
+      overflow:hidden;
+      background:#0c100d;
+      border:1px solid #293229;
+    }
+
+    .progress > div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      transition:width .3s ease;
+    }
+
+    .finish-area{
+      padding:22px;
+      border-top:1px solid var(--line);
+    }
+
+    .finish-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .upload{
+      padding:16px;
+      border:1px dashed #465448;
+      border-radius:11px;
+      background:#0e1310;
+    }
+
+    .upload input{
+      width:100%;
+      color:var(--muted);
+    }
+
+    #preview{
+      display:none;
+      width:100%;
+      max-height:280px;
+      object-fit:contain;
+      margin-top:12px;
+      background:#090b0a;
+      border-radius:8px;
+      border:1px solid #303a32;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    #completeSection{display:none}
+
+    .summary{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .summary > div{
+      padding:12px 14px;
+      background:#0f1411;
+      border:1px solid #2d382f;
+      border-radius:9px;
+    }
+
+    .summary b{display:block;margin-top:3px}
+
+    .hidden{display:none!important}
+
+    @media(max-width:900px){
+      .form-grid{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .finish-grid{grid-template-columns:1fr}
+      iframe{height:680px}
+    }
+
+    @media(max-width:520px){
+      .page{padding:10px}
+      .topbar{align-items:flex-start;flex-direction:column}
+      .metrics{grid-template-columns:1fr 1fr}
+      iframe{height:620px}
+      .summary{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div>
+      <div class="title">ĒRGĻA IZAICINĀJUMS</div>
+      <div class="subtitle">Mācību uzdevums ar dalības un pabeigšanas uzskaiti</div>
+    </div>
+    <div class="status-pill" id="connectionStatus">REĢISTRS: LOKĀLS</div>
+  </div>
+
+  <div class="card resume-box" id="resumeBox">
+    <div class="card-body">
+      <div class="notice warn">
+        Šajā pārlūkā atrasta nepabeigta iepriekšējā sesija.
+      </div>
+      <div id="resumeText" class="small"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="resumeBtn" type="button">TURPINĀT IESĀKTO</button>
+        <button class="btn btn-danger" id="discardBtn" type="button">DZĒST UN SĀKT NO JAUNA</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="card" id="registrationSection">
+    <div class="card-head">
+      <h2>1. Reģistrācija</h2>
+      <p>Pirms spēles sākšanas ievadi savus datus. Spēles sākuma laiks tiks fiksēts pēc pogas “Sākt spēli” nospiešanas.</p>
+    </div>
+
+    <div class="card-body">
+      <div class="form-grid">
+        <div>
+          <label for="firstName">Vārds</label>
+          <input id="firstName" type="text" autocomplete="given-name" maxlength="60">
+        </div>
+
+        <div>
+          <label for="lastName">Uzvārds</label>
+          <input id="lastName" type="text" autocomplete="family-name" maxlength="60">
+        </div>
+
+        <div>
+          <label for="groupName">Klase / grupa</label>
+          <input id="groupName" type="text" maxlength="60" placeholder="Piem., 10.a">
+        </div>
+      </div>
+
+      <div class="checkline">
+        <input id="confirmIdentity" type="checkbox">
+        <label for="confirmIdentity" style="margin:0;font-weight:400">
+          Apstiprinu, ka ievadītie dati ir mani un šo uzdevumu izpildu pats/-i.
+        </label>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="startBtn" type="button">SĀKT SPĒLI</button>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="card" id="gameSection">
+    <div class="metrics">
+      <div class="metric">
+        <div class="k">Dalībnieks</div>
+        <div class="v" id="mStudent">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="k">Sesijas ID</div>
+        <div class="v" id="mSession">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="k">Sākts</div>
+        <div class="v" id="mStart">—</div>
+      </div>
+
+      <div class="metric">
+        <div class="k">Kopējais laiks</div>
+        <div class="v" id="mElapsed">00:00:00</div>
+      </div>
+
+      <div class="metric">
+        <div class="k">Lapa redzama</div>
+        <div class="v" id="mVisible">00:00:00</div>
+      </div>
+    </div>
+
+    <div class="game-wrap">
+      <iframe
+        id="gameFrame"
+        src="about:blank"
+        title="KNAB Ērgļa izaicinājums"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="progress-area">
+      <div class="progress-row">
+        <span id="unlockText">Pabeigšanas apstiprinājums vēl nav pieejams.</span>
+        <span id="progressText">0%</span>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="small" style="margin-top:9px">
+        “Lapa redzama” nozīmē laiku, kad šī pārlūka cilne ir bijusi redzama. Ārējās spēles saturu lapa drošības dēļ nevar nolasīt.
+      </div>
+    </div>
+
+    <div class="finish-area">
+      <div class="card-head" style="padding:0 0 16px;border:0">
+        <h2>2. Pabeigšanas apstiprinājums</h2>
+        <p>Šī sadaļa kļūst aktīva pēc minimālā uzdevuma laika sasniegšanas.</p>
+      </div>
+
+      <div class="finish-grid">
+        <div>
+          <label for="resultValue">Rezultāts / punkti (ja spēle tādus parāda)</label>
+          <input id="resultValue" type="text" maxlength="100" placeholder="Piem., 85 punkti">
+
+          <div class="checkline">
+            <input id="finishedAll" type="checkbox" disabled>
+            <label for="finishedAll" style="margin:0;font-weight:400">
+              Apstiprinu, ka esmu pabeidzis/-usi uzdevumu spēlē.
+            </label>
+          </div>
+
+          <div class="notice warn" id="finishLockNotice" style="margin-top:15px">
+            Pabeigšanas poga tiks atbloķēta pēc minimālā redzamā laika.
+          </div>
+        </div>
+
+        <div class="upload">
+          <label for="proofFile">Pabeigšanas ekrānuzņēmums *</label>
+          <input id="proofFile" type="file" accept="image/*" disabled>
+          <div class="small" style="margin-top:8px">
+            Pievieno ekrānuzņēmumu, kur redzams spēles beigu / rezultāta ekrāns.
+          </div>
+          <img id="preview" alt="Ekrānuzņēmuma priekšskatījums">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="finishBtn" type="button" disabled>
+          IESNIEGT UN PABEIGT
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="card" id="completeSection">
+    <div class="card-head">
+      <h2>Uzdevums pabeigts</h2>
+      <p>Sesijas ieraksts ir sagatavots.</p>
+    </div>
+
+    <div class="card-body">
+      <div class="notice ok" id="completeMessage">
+        Pabeigšana ir reģistrēta.
+      </div>
+
+      <div class="summary" id="summary"></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" id="downloadReceiptBtn" type="button">
+          LEJUPIELĀDĒT SESIJAS APLIECINĀJUMU
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<script>
+(function(){
+
+  /* ============================================================
+     GALVENIE IESTATĪJUMI
+     ============================================================ */
+
+  const GAME_URL = "https://info.knab.gov.lv/ergla-izaicinajums/";
+
+  // Maini šo skaitli pēc vajadzības.
+  // Piemēram 30 = pabeigšanas apstiprinājums pēc 30 min redzamā laika.
+  const MIN_REQUIRED_MINUTES = 30;
+  const MIN_REQUIRED_SECONDS = MIN_REQUIRED_MINUTES * 60;
+
+  /*
+    GOOGLE SHEETS / APPS SCRIPT:
+    Šobrīd atstāj tukšu.
+    Nākamajā solī šeit ievietosim Google Apps Script Web App URL.
+
+    Piemērs:
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/...../exec";
+  */
+  const APPS_SCRIPT_URL = "";
+
+  const STORAGE_KEY = "erglaChallengeActiveSession_v1";
+  const COMPLETED_KEY = "erglaChallengeCompleted_v1";
+
+  let session = null;
+  let timerId = null;
+  let lastTick = Date.now();
+  let receipt = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  function uuid(){
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "sess-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function pad(n){ return String(n).padStart(2,"0"); }
+
+  function formatDuration(totalSeconds){
+    totalSeconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return pad(h) + ":" + pad(m) + ":" + pad(s);
+  }
+
+  function formatLocal(iso){
+    try{
+      return new Date(iso).toLocaleString("lv-LV");
+    }catch(e){
+      return iso || "—";
+    }
+  }
+
+  function saveSession(){
+    if (!session) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+  }
+
+  function loadSession(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function clearSession(){
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function setConnectionStatus(){
+    if (APPS_SCRIPT_URL){
+      $("connectionStatus").textContent = "REĢISTRS: GOOGLE SHEETS";
+      $("connectionStatus").style.color = "#d6ebbe";
+    }else{
+      $("connectionStatus").textContent = "REĢISTRS: LOKĀLS";
+    }
+  }
+
+  /*
+    Notikumu sūtīšana uz serveri.
+    Apps Script URL pievienosim nākamajā solī.
+
+    Serverim tiks sūtīti notikumi:
+    - START
+    - FINISH
+    - ABANDON
+  */
+  async function sendEventToServer(payload){
+    if (!APPS_SCRIPT_URL) return {skipped:true};
+
+    try{
+      await fetch(APPS_SCRIPT_URL, {
+        method:"POST",
+        mode:"no-cors",
+        headers:{
+          "Content-Type":"text/plain;charset=utf-8"
+        },
+        body:JSON.stringify(payload)
+      });
+
+      return {sent:true};
+    }catch(err){
+      console.error("Reģistra nosūtīšanas kļūda:", err);
+      return {sent:false, error:String(err)};
+    }
+  }
+
+  function showResumeIfNeeded(){
+    const old = loadSession();
+    if (!old || old.finishedAt) return;
+
+    $("resumeBox").style.display = "block";
+    $("registrationSection").style.display = "none";
+
+    $("resumeText").innerHTML =
+      "Dalībnieks: <b>" +
+      escapeHtml(old.firstName + " " + old.lastName) +
+      "</b><br>Grupa: <b>" +
+      escapeHtml(old.groupName) +
+      "</b><br>Sākts: <b>" +
+      escapeHtml(formatLocal(old.startedAt)) +
+      "</b>";
+  }
+
+  function startNewSession(){
+    const firstName = $("firstName").value.trim();
+    const lastName = $("lastName").value.trim();
+    const groupName = $("groupName").value.trim();
+
+    if (!firstName || !lastName || !groupName){
+      alert("Lūdzu ievadi vārdu, uzvārdu un klasi / grupu.");
+      return;
+    }
+
+    if (!$("confirmIdentity").checked){
+      alert("Lūdzu apstiprini, ka ievadītie dati ir pareizi.");
+      return;
+    }
+
+    session = {
+      sessionId: uuid(),
+      firstName,
+      lastName,
+      groupName,
+      startedAt: new Date().toISOString(),
+      finishedAt: null,
+      visibleSeconds: 0,
+      lastSavedAt: new Date().toISOString(),
+      resultValue: "",
+      proofFileName: "",
+      status: "IN_PROGRESS"
+    };
+
+    saveSession();
+
+    sendEventToServer({
+      event:"START",
+      sessionId:session.sessionId,
+      firstName:session.firstName,
+      lastName:session.lastName,
+      groupName:session.groupName,
+      clientStartedAt:session.startedAt,
+      userAgent:navigator.userAgent
+    });
+
+    openGame();
+  }
+
+  function resumeSession(){
+    session = loadSession();
+
+    if (!session){
+      $("resumeBox").style.display = "none";
+      $("registrationSection").style.display = "block";
+      return;
+    }
+
+    openGame();
+  }
+
+  function openGame(){
+    $("resumeBox").style.display = "none";
+    $("registrationSection").style.display = "none";
+    $("gameSection").style.display = "block";
+    $("completeSection").style.display = "none";
+
+    $("gameFrame").src = GAME_URL;
+
+    $("mStudent").textContent =
+      session.firstName + " " + session.lastName + " / " + session.groupName;
+
+    $("mSession").textContent = session.sessionId.slice(0,8);
+    $("mStart").textContent = formatLocal(session.startedAt);
+
+    updateUI();
+
+    lastTick = Date.now();
+    clearInterval(timerId);
+    timerId = setInterval(tick,1000);
+
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function tick(){
+    if (!session) return;
+
+    const now = Date.now();
+    const diff = Math.min(3, Math.max(0, (now - lastTick) / 1000));
+    lastTick = now;
+
+    if (document.visibilityState === "visible"){
+      session.visibleSeconds += diff;
+    }
+
+    session.lastSavedAt = new Date().toISOString();
+
+    updateUI();
+
+    // Nerakstām localStorage katru sekundi.
+    if (Math.floor(session.visibleSeconds) % 5 === 0){
+      saveSession();
+    }
+  }
+
+  function updateUI(){
+    if (!session) return;
+
+    const elapsed = Math.max(
+      0,
+      (Date.now() - new Date(session.startedAt).getTime()) / 1000
+    );
+
+    $("mElapsed").textContent = formatDuration(elapsed);
+    $("mVisible").textContent = formatDuration(session.visibleSeconds);
+
+    const pct = Math.min(
+      100,
+      Math.round((session.visibleSeconds / MIN_REQUIRED_SECONDS) * 100)
+    );
+
+    $("progressBar").style.width = pct + "%";
+    $("progressText").textContent = pct + "%";
+
+    const remaining = Math.max(
+      0,
+      MIN_REQUIRED_SECONDS - session.visibleSeconds
+    );
+
+    if (remaining > 0){
+      $("unlockText").textContent =
+        "Pabeigšanas apstiprinājums pieejams pēc " +
+        formatDuration(remaining);
+
+      $("finishedAll").disabled = true;
+      $("proofFile").disabled = true;
+      $("finishBtn").disabled = true;
+
+      $("finishLockNotice").className = "notice warn";
+      $("finishLockNotice").textContent =
+        "Nepieciešamas vismaz " +
+        MIN_REQUIRED_MINUTES +
+        " minūtes redzama uzdevuma laika.";
+    }else{
+      $("unlockText").textContent =
+        "Minimālais laiks sasniegts — vari iesniegt pabeigšanu.";
+
+      $("finishedAll").disabled = false;
+      $("proofFile").disabled = false;
+
+      $("finishLockNotice").className = "notice ok";
+      $("finishLockNotice").textContent =
+        "Pabeigšanas apstiprinājums ir atbloķēts.";
+
+      validateFinish();
+    }
+  }
+
+  function validateFinish(){
+    if (!session) return;
+
+    const timeOk = session.visibleSeconds >= MIN_REQUIRED_SECONDS;
+    const checked = $("finishedAll").checked;
+    const fileOk = $("proofFile").files.length > 0;
+
+    $("finishBtn").disabled = !(timeOk && checked && fileOk);
+  }
+
+  function fileToDataUrl(file){
+    return new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function finishSession(){
+    if (!session) return;
+
+    const proof = $("proofFile").files[0];
+
+    if (!proof){
+      alert("Pievieno pabeigšanas ekrānuzņēmumu.");
+      return;
+    }
+
+    if (!$("finishedAll").checked){
+      alert("Apstiprini, ka esi pabeidzis/-usi uzdevumu.");
+      return;
+    }
+
+    if (session.visibleSeconds < MIN_REQUIRED_SECONDS){
+      alert("Minimālais uzdevuma laiks vēl nav sasniegts.");
+      return;
+    }
+
+    $("finishBtn").disabled = true;
+    $("finishBtn").textContent = "SAGATAVO IERAKSTU...";
+
+    let proofDataUrl = "";
+    try{
+      proofDataUrl = await fileToDataUrl(proof);
+    }catch(e){
+      alert("Neizdevās nolasīt ekrānuzņēmumu.");
+      $("finishBtn").disabled = false;
+      $("finishBtn").textContent = "IESNIEGT UN PABEIGT";
+      return;
+    }
+
+    session.finishedAt = new Date().toISOString();
+    session.resultValue = $("resultValue").value.trim();
+    session.proofFileName = proof.name;
+    session.status = "COMPLETED";
+
+    const elapsedSeconds = Math.max(
+      0,
+      (new Date(session.finishedAt).getTime() -
+       new Date(session.startedAt).getTime()) / 1000
+    );
+
+    receipt = {
+      event:"FINISH",
+      sessionId:session.sessionId,
+      firstName:session.firstName,
+      lastName:session.lastName,
+      groupName:session.groupName,
+      clientStartedAt:session.startedAt,
+      clientFinishedAt:session.finishedAt,
+      elapsedSeconds:Math.round(elapsedSeconds),
+      visibleSeconds:Math.round(session.visibleSeconds),
+      resultValue:session.resultValue,
+      proofFileName:session.proofFileName,
+      proofImageDataUrl:proofDataUrl,
+      status:"COMPLETED"
+    };
+
+    await sendEventToServer(receipt);
+
+    // Pabeigto sesiju saglabā lokāli BEZ attēla,
+    // lai nepārsniegtu localStorage limitu.
+    const localReceipt = {...receipt};
+    delete localReceipt.proofImageDataUrl;
+
+    try{
+      const old = JSON.parse(localStorage.getItem(COMPLETED_KEY) || "[]");
+      old.push(localReceipt);
+      localStorage.setItem(COMPLETED_KEY,JSON.stringify(old.slice(-50)));
+    }catch(e){}
+
+    clearInterval(timerId);
+    clearSession();
+
+    $("gameSection").style.display = "none";
+    $("completeSection").style.display = "block";
+
+    $("completeMessage").textContent =
+      APPS_SCRIPT_URL
+        ? "Pabeigšanas ieraksts ir nosūtīts reģistram."
+        : "Pabeigšana ir saglabāta lokāli. Google Sheets reģistrs vēl nav pieslēgts.";
+
+    renderSummary(localReceipt);
+
+    window.scrollTo({
+      top:$("completeSection").offsetTop - 10,
+      behavior:"smooth"
+    });
+  }
+
+  function renderSummary(r){
+    $("summary").innerHTML =
+      "<div>Dalībnieks<b>" +
+      escapeHtml(r.firstName + " " + r.lastName) +
+      "</b></div>" +
+
+      "<div>Klase / grupa<b>" +
+      escapeHtml(r.groupName) +
+      "</b></div>" +
+
+      "<div>Sākums<b>" +
+      escapeHtml(formatLocal(r.clientStartedAt)) +
+      "</b></div>" +
+
+      "<div>Pabeigšana<b>" +
+      escapeHtml(formatLocal(r.clientFinishedAt)) +
+      "</b></div>" +
+
+      "<div>Kopējais laiks<b>" +
+      escapeHtml(formatDuration(r.elapsedSeconds)) +
+      "</b></div>" +
+
+      "<div>Redzamais laiks<b>" +
+      escapeHtml(formatDuration(r.visibleSeconds)) +
+      "</b></div>" +
+
+      "<div>Rezultāts<b>" +
+      escapeHtml(r.resultValue || "Nav norādīts") +
+      "</b></div>" +
+
+      "<div>Sesijas ID<b>" +
+      escapeHtml(r.sessionId) +
+      "</b></div>";
+  }
+
+  function downloadReceipt(){
+    if (!receipt) return;
+
+    const safe = {...receipt};
+    delete safe.proofImageDataUrl;
+
+    const blob = new Blob(
+      [JSON.stringify(safe,null,2)],
+      {type:"application/json"}
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download =
+      "ergla-" +
+      (safe.firstName + "-" + safe.lastName)
+        .toLowerCase()
+        .replace(/[^a-z0-9āčēģīķļņšūž-]+/gi,"-") +
+      ".json";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+
+
+  /* ============================================================
+     NOTIKUMI
+     ============================================================ */
+
+  $("startBtn").addEventListener("click",startNewSession);
+  $("resumeBtn").addEventListener("click",resumeSession);
+
+  $("discardBtn").addEventListener("click",function(){
+    if (confirm("Dzēst nepabeigto sesiju un sākt no jauna?")){
+      clearSession();
+      $("resumeBox").style.display = "none";
+      $("registrationSection").style.display = "block";
+    }
+  });
+
+  $("finishedAll").addEventListener("change",validateFinish);
+  $("proofFile").addEventListener("change",function(){
+    const file = this.files[0];
+
+    if (!file){
+      $("preview").style.display = "none";
+      $("preview").removeAttribute("src");
+      validateFinish();
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(){
+      $("preview").src = reader.result;
+      $("preview").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+
+    validateFinish();
+  });
+
+  $("finishBtn").addEventListener("click",finishSession);
+  $("downloadReceiptBtn").addEventListener("click",downloadReceipt);
+
+  /*
+    Ja nākotnē KNAB spēle sāktu izmantot window.postMessage,
+    šo vietu var paplašināt automātiskai pabeigšanas noteikšanai.
+    Šobrīd mēs NEPAĻAUJAMIES uz šādu signālu.
+  */
+  window.addEventListener("message",function(event){
+    if (event.origin !== "https://info.knab.gov.lv") return;
+    console.log("KNAB iframe message:", event.data);
+  });
+
+  /*
+    Ja lietotājs aizver lapu nepabeidzot, mēģinām reģistram
+    nosūtīt ABANDON notikumu. Tas sāks reāli darboties,
+    kad APPS_SCRIPT_URL būs aizpildīts.
+  */
+  window.addEventListener("pagehide",function(){
+    if (!session || session.finishedAt || !APPS_SCRIPT_URL) return;
+
+    const payload = {
+      event:"ABANDON",
+      sessionId:session.sessionId,
+      firstName:session.firstName,
+      lastName:session.lastName,
+      groupName:session.groupName,
+      clientStartedAt:session.startedAt,
+      visibleSeconds:Math.round(session.visibleSeconds)
+    };
+
+    try{
+      navigator.sendBeacon(
+        APPS_SCRIPT_URL,
+        new Blob(
+          [JSON.stringify(payload)],
+          {type:"text/plain;charset=UTF-8"}
+        )
+      );
+    }catch(e){}
+  });
+
+  document.addEventListener("visibilitychange",function(){
+    lastTick = Date.now();
+    saveSession();
+  });
+
+  setConnectionStatus();
+  showResumeIfNeeded();
+
+})();
+</script>
+
+</body>
+</html>
