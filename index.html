@@ -7,26 +7,29 @@
 
   <style>
     :root{
-      --bg:#0b0e0f;
-      --panel:#111713;
-      --panel2:#171d19;
-      --line:#2a332d;
-      --text:#f4f7f5;
-      --muted:#aeb8b1;
-      --accent:#9bad7a;
-      --accent2:#c1d29d;
-      --danger:#d75c50;
-      --warn:#d3a94f;
-      --ok:#7fb06f;
+      --bg:#0b0d12;
+      --panel:#12151c;
+      --panel2:#171b24;
+      --line:#2a303b;
+      --text:#f5f7fb;
+      --muted:#98a2b3;
+      --accent:#5b8cff;
+      --accent2:#8fb0ff;
+      --danger:#ff5d5d;
+      --warn:#f2b84b;
+      --ok:#5b8cff;
     }
 
     *{box-sizing:border-box}
 
     body{
       margin:0;
-      background:var(--bg);
+      background:
+        radial-gradient(circle at top left, rgba(91,140,255,.08), transparent 34%),
+        linear-gradient(180deg,#0a0c11 0%,#0d1016 100%);
       color:var(--text);
-      font-family:Arial,Helvetica,sans-serif;
+      font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;
+      min-height:100vh;
     }
 
     button,input,select,textarea{font:inherit}
@@ -35,7 +38,7 @@
       width:100%;
       max-width:1500px;
       margin:0 auto;
-      padding:18px;
+      padding:24px;
     }
 
     .topbar{
@@ -43,18 +46,19 @@
       gap:18px;
       align-items:center;
       justify-content:space-between;
-      padding:20px 24px;
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-bottom:3px solid var(--accent);
-      border-radius:16px;
-      margin-bottom:16px;
+      padding:24px 28px;
+      background:rgba(18,21,28,.92);
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:20px;
+      margin-bottom:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
     }
 
     .title{
-      font-size:clamp(24px,4vw,36px);
+      font-size:clamp(26px,4vw,38px);
       font-weight:800;
-      letter-spacing:.5px;
+      letter-spacing:-.02em;
     }
 
     .subtitle{
@@ -65,26 +69,29 @@
 
     .status-pill{
       flex:0 0 auto;
-      padding:9px 13px;
+      padding:10px 14px;
       border-radius:999px;
-      background:#202822;
-      border:1px solid #344137;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:700;
+      background:#171b24;
+      border:1px solid rgba(91,140,255,.28);
+      color:#b7c8ff;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
     }
 
     .card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:16px;
+      background:rgba(18,21,28,.96);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:20px;
       overflow:hidden;
-      margin-bottom:16px;
+      margin-bottom:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.22);
     }
 
     .card-head{
-      padding:18px 22px;
-      border-bottom:1px solid var(--line);
+      padding:20px 24px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg,rgba(255,255,255,.018),transparent);
     }
 
     .card-head h2{
@@ -121,15 +128,15 @@
       min-height:46px;
       padding:11px 12px;
       color:var(--text);
-      background:#0e1310;
-      border:1px solid #344137;
+      background:#0d1118;
+      border:1px solid #2e3542;
       border-radius:9px;
       outline:none;
     }
 
     input:focus{
       border-color:var(--accent);
-      box-shadow:0 0 0 3px rgba(155,173,122,.14);
+      box-shadow:0 0 0 4px rgba(91,140,255,.13);
     }
 
     .checkline{
@@ -157,13 +164,13 @@
     }
 
     .btn{
-      min-height:44px;
-      padding:11px 18px;
+      min-height:46px;
+      padding:12px 20px;
       border:0;
-      border-radius:9px;
+      border-radius:11px;
       cursor:pointer;
       font-weight:800;
-      transition:.15s ease;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
     }
 
     .btn:hover:not(:disabled){transform:translateY(-1px)}
@@ -174,20 +181,21 @@
     }
 
     .btn-primary{
-      background:var(--accent);
-      color:#101410;
+      background:linear-gradient(135deg,#5b8cff,#416fe5);
+      color:#ffffff;
+      box-shadow:0 8px 22px rgba(65,111,229,.26);
     }
 
     .btn-secondary{
-      background:#273029;
-      color:#f1f5f2;
-      border:1px solid #3c493f;
+      background:#1c2230;
+      color:#eef2f8;
+      border:1px solid #30394a;
     }
 
     .btn-danger{
-      background:#4a2523;
-      color:#ffd9d5;
-      border:1px solid #6c3430;
+      background:#3a1f24;
+      color:#ffd7da;
+      border:1px solid #63303a;
     }
 
     .notice{
@@ -196,8 +204,8 @@
       font-size:14px;
       line-height:1.5;
       margin-bottom:14px;
-      background:#182019;
-      border:1px solid #334037;
+      background:#171b24;
+      border:1px solid #2e3542;
       color:#d9e1db;
     }
 
@@ -208,9 +216,9 @@
     }
 
     .notice.ok{
-      background:#162218;
-      border-color:#315036;
-      color:#cce8d0;
+      background:#171b24;
+      border-color:#30394a;
+      color:#dde1e7;
     }
 
     .resume-box{display:none}
@@ -220,25 +228,25 @@
     .metrics{
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:10px;
-      padding:14px;
-      background:var(--panel2);
-      border-bottom:1px solid var(--line);
+      gap:12px;
+      padding:16px;
+      background:#10141b;
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
 
     .metric{
       min-width:0;
-      padding:12px;
-      border-radius:10px;
-      background:#0f1411;
-      border:1px solid #2e3931;
+      padding:14px;
+      border-radius:13px;
+      background:#151a23;
+      border:1px solid #293240;
     }
 
     .metric .k{
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:.7px;
-      color:#8f9d93;
+      color:#7f8a9a;
       margin-bottom:6px;
     }
 
@@ -249,8 +257,8 @@
     }
 
     .game-wrap{
-      background:#000;
-      padding:10px;
+      background:#090b10;
+      padding:12px;
     }
 
     iframe{
@@ -306,9 +314,9 @@
 
     .upload{
       padding:16px;
-      border:1px dashed #465448;
+      border:1px dashed #3a4455;
       border-radius:11px;
-      background:#0e1310;
+      background:#0d1118;
     }
 
     .upload input{
@@ -322,9 +330,9 @@
       max-height:280px;
       object-fit:contain;
       margin-top:12px;
-      background:#090b0a;
+      background:#0a0d12;
       border-radius:8px;
-      border:1px solid #303a32;
+      border:1px solid #2f3745;
     }
 
     .small{
@@ -344,8 +352,8 @@
 
     .summary > div{
       padding:12px 14px;
-      background:#0f1411;
-      border:1px solid #2d382f;
+      background:#151a23;
+      border:1px solid #293240;
       border-radius:9px;
     }
 
@@ -367,6 +375,69 @@
       iframe{height:620px}
       .summary{grid-template-columns:1fr}
     }
+  
+    .modal-backdrop{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:rgba(0,0,0,.72);
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .modal-backdrop.show{display:flex}
+
+    .error-modal{
+      width:min(520px,100%);
+      background:#171a21;
+      border:1px solid rgba(255,93,93,.6);
+      border-radius:16px;
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+      padding:28px 24px 22px;
+      text-align:center;
+      animation:popIn .16s ease-out;
+    }
+
+    .error-icon{
+      width:64px;
+      height:64px;
+      margin:0 auto 16px;
+      border-radius:50%;
+      background:#35191d;
+      border:1px solid #ff5d5d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ff7b7b;
+      font-size:36px;
+      font-weight:900;
+    }
+
+    .error-modal h3{
+      margin:0 0 10px;
+      font-size:24px;
+      color:#ff9c9c;
+    }
+
+    .error-modal p{
+      margin:0 0 18px;
+      color:#f2d4d3;
+      line-height:1.55;
+    }
+
+    .btn-modal{
+      background:linear-gradient(135deg,#ff5d5d,#d94343);
+      color:white;
+      min-width:150px;
+    }
+
+    @keyframes popIn{
+      from{transform:scale(.94);opacity:0}
+      to{transform:scale(1);opacity:1}
+    }
+
   </style>
 </head>
 
@@ -376,7 +447,7 @@
   <div class="topbar">
     <div>
       <div class="title">ĒRGĻA IZAICINĀJUMS</div>
-      <div class="subtitle">Mācību uzdevums ar dalības un pabeigšanas uzskaiti</div>
+      <div class="subtitle">Interaktīvs mācību uzdevums ar dalības un pabeigšanas uzskaiti</div>
     </div>
     <div class="status-pill" id="connectionStatus">REĢISTRS: LOKĀLS</div>
   </div>
@@ -471,20 +542,15 @@
     </div>
 
     <div class="progress-area">
-      <div class="progress-row">
-        <span id="unlockText">Pabeigšanas apstiprinājums vēl nav pieejams.</span>
-        <span id="progressText">0%</span>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-      <div class="small" style="margin-top:9px">
-        “Lapa redzama” nozīmē laiku, kad šī pārlūka cilne ir bijusi redzama. Ārējās spēles saturu lapa drošības dēļ nevar nolasīt.
+      <div class="small">
+        Laika uzskaite tiek saglabāta tikai kontrolei. Pabeigšanas poga nav piesaistīta minimālam laikam.
       </div>
     </div>
 
     <div class="finish-area">
       <div class="card-head" style="padding:0 0 16px;border:0">
         <h2>2. Pabeigšanas apstiprinājums</h2>
-        <p>Šī sadaļa kļūst aktīva pēc minimālā uzdevuma laika sasniegšanas.</p>
+        <p>Kad esi pabeidzis/-usi spēli, pievieno ekrānuzņēmumu un apstiprini pabeigšanu.</p>
       </div>
 
       <div class="finish-grid">
@@ -493,20 +559,16 @@
           <input id="resultValue" type="text" maxlength="100" placeholder="Piem., 85 punkti">
 
           <div class="checkline">
-            <input id="finishedAll" type="checkbox" disabled>
+            <input id="finishedAll" type="checkbox">
             <label for="finishedAll" style="margin:0;font-weight:400">
               Apstiprinu, ka esmu pabeidzis/-usi uzdevumu spēlē.
             </label>
-          </div>
-
-          <div class="notice warn" id="finishLockNotice" style="margin-top:15px">
-            Pabeigšanas poga tiks atbloķēta pēc minimālā redzamā laika.
           </div>
         </div>
 
         <div class="upload">
           <label for="proofFile">Pabeigšanas ekrānuzņēmums *</label>
-          <input id="proofFile" type="file" accept="image/*" disabled>
+          <input id="proofFile" type="file" accept="image/*">
           <div class="small" style="margin-top:8px">
             Pievieno ekrānuzņēmumu, kur redzams spēles beigu / rezultāta ekrāns.
           </div>
@@ -515,7 +577,7 @@
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary" id="finishBtn" type="button" disabled>
+        <button class="btn btn-primary" id="finishBtn" type="button">
           IESNIEGT UN PABEIGT
         </button>
       </div>
@@ -544,6 +606,16 @@
     </div>
   </section>
 
+
+  <div class="modal-backdrop" id="screenshotModal" role="dialog" aria-modal="true" aria-labelledby="screenshotModalTitle">
+    <div class="error-modal">
+      <div class="error-icon">!</div>
+      <h3 id="screenshotModalTitle">NEPIECIEŠAMS EKRĀNUZŅĒMUMS</h3>
+      <p>Lai pabeigtu uzdevumu, vispirms pievieno ekrānuzņēmumu, kur redzams spēles beigu vai rezultāta ekrāns.</p>
+      <button type="button" class="btn btn-modal" id="closeScreenshotModal">SAPRATU</button>
+    </div>
+  </div>
+
 </div>
 
 
@@ -555,11 +627,6 @@
      ============================================================ */
 
   const GAME_URL = "https://info.knab.gov.lv/ergla-izaicinajums/";
-
-  // Maini šo skaitli pēc vajadzības.
-  // Piemēram 30 = pabeigšanas apstiprinājums pēc 30 min redzamā laika.
-  const MIN_REQUIRED_MINUTES = 30;
-  const MIN_REQUIRED_SECONDS = MIN_REQUIRED_MINUTES * 60;
 
   /*
     GOOGLE SHEETS / APPS SCRIPT:
@@ -797,56 +864,14 @@
     $("mElapsed").textContent = formatDuration(elapsed);
     $("mVisible").textContent = formatDuration(session.visibleSeconds);
 
-    const pct = Math.min(
-      100,
-      Math.round((session.visibleSeconds / MIN_REQUIRED_SECONDS) * 100)
-    );
-
-    $("progressBar").style.width = pct + "%";
-    $("progressText").textContent = pct + "%";
-
-    const remaining = Math.max(
-      0,
-      MIN_REQUIRED_SECONDS - session.visibleSeconds
-    );
-
-    if (remaining > 0){
-      $("unlockText").textContent =
-        "Pabeigšanas apstiprinājums pieejams pēc " +
-        formatDuration(remaining);
-
-      $("finishedAll").disabled = true;
-      $("proofFile").disabled = true;
-      $("finishBtn").disabled = true;
-
-      $("finishLockNotice").className = "notice warn";
-      $("finishLockNotice").textContent =
-        "Nepieciešamas vismaz " +
-        MIN_REQUIRED_MINUTES +
-        " minūtes redzama uzdevuma laika.";
-    }else{
-      $("unlockText").textContent =
-        "Minimālais laiks sasniegts — vari iesniegt pabeigšanu.";
-
-      $("finishedAll").disabled = false;
-      $("proofFile").disabled = false;
-
-      $("finishLockNotice").className = "notice ok";
-      $("finishLockNotice").textContent =
-        "Pabeigšanas apstiprinājums ir atbloķēts.";
-
-      validateFinish();
-    }
+    validateFinish();
   }
 
   function validateFinish(){
     if (!session) return;
 
-    const timeOk = session.visibleSeconds >= MIN_REQUIRED_SECONDS;
     const checked = $("finishedAll").checked;
-    const fileOk = $("proofFile").files.length > 0;
-
-    $("finishBtn").disabled = !(timeOk && checked && fileOk);
+    $("finishBtn").disabled = !checked;
   }
 
   function fileToDataUrl(file){
@@ -863,18 +888,13 @@
 
     const proof = $("proofFile").files[0];
 
-    if (!proof){
-      alert("Pievieno pabeigšanas ekrānuzņēmumu.");
-      return;
-    }
-
     if (!$("finishedAll").checked){
       alert("Apstiprini, ka esi pabeidzis/-usi uzdevumu.");
       return;
     }
 
-    if (session.visibleSeconds < MIN_REQUIRED_SECONDS){
-      alert("Minimālais uzdevuma laiks vēl nav sasniegts.");
+    if (!proof){
+      showScreenshotModal();
       return;
     }
 
@@ -1015,9 +1035,32 @@
   }
 
 
+
+  function showScreenshotModal(){
+    $("screenshotModal").classList.add("show");
+    $("closeScreenshotModal").focus();
+  }
+
+  function hideScreenshotModal(){
+    $("screenshotModal").classList.remove("show");
+    $("proofFile").focus();
+  }
+
   /* ============================================================
      NOTIKUMI
      ============================================================ */
+
+  $("closeScreenshotModal").addEventListener("click",hideScreenshotModal);
+
+  $("screenshotModal").addEventListener("click",function(event){
+    if (event.target === this) hideScreenshotModal();
+  });
+
+  document.addEventListener("keydown",function(event){
+    if (event.key === "Escape" && $("screenshotModal").classList.contains("show")){
+      hideScreenshotModal();
+    }
+  });
 
   $("startBtn").addEventListener("click",startNewSession);
   $("resumeBtn").addEventListener("click",resumeSession);
