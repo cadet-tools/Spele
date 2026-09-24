@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ērgļa izaicinājums — mācību uzdevums</title>
+  <title>Interlande — Piesardzības kalns | CADET.LV</title>
   <link rel="icon" type="image/png" href="https://site-710050.mozfiles.com/files/710050/medium/CADET_LV.png">
 
   <style>
@@ -273,9 +273,50 @@
       overflow-wrap:anywhere;
     }
 
+    .game-toolbar{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:10px;
+      padding:12px 12px 0;
+      background:#090b10;
+    }
+
+    .game-toolbar .btn{
+      min-height:42px;
+      padding:10px 16px;
+    }
+
     .game-wrap{
       background:#090b10;
       padding:12px;
+    }
+
+    .game-fullscreen-shell:fullscreen{
+      background:#000;
+      display:flex;
+      flex-direction:column;
+      width:100%;
+      height:100%;
+    }
+
+    .game-fullscreen-shell:fullscreen .game-toolbar{
+      flex:0 0 auto;
+      padding:10px;
+    }
+
+    .game-fullscreen-shell:fullscreen .game-wrap{
+      flex:1 1 auto;
+      min-height:0;
+      display:flex;
+      padding:0;
+    }
+
+    .game-fullscreen-shell:fullscreen iframe{
+      flex:1 1 auto;
+      width:100%;
+      height:100%;
+      border-radius:0;
     }
 
     iframe{
@@ -554,8 +595,8 @@
       <img src="https://site-710050.mozfiles.com/files/710050/medium/CADET_LV.png" alt="CADET.LV">
     </a>
 
-    <div class="title">ĒRGĻA IZAICINĀJUMS</div>
-    <div class="subtitle">Interaktīvs mācību uzdevums ar dalības un pabeigšanas uzskaiti</div>
+    <div class="title">INTERLANDE — PIESARDZĪBAS KALNS</div>
+    <div class="subtitle">Interneta drošības spēle “Dalies piesardzīgi” ar dalības un pabeigšanas uzskaiti</div>
   </div>
 
   
@@ -639,14 +680,22 @@
       </div>
     </div>
 
-    <div class="game-wrap">
-      <iframe
-        id="gameFrame"
-        src="about:blank"
-        title="KNAB Ērgļa izaicinājums"
-        allow="autoplay; fullscreen"
-        allowfullscreen>
-      </iframe>
+    <div class="game-fullscreen-shell" id="gameFullscreenShell">
+      <div class="game-toolbar">
+        <button class="btn btn-secondary" id="fullscreenBtn" type="button">
+          ⛶ PILNEKRĀNA REŽĪMS
+        </button>
+      </div>
+
+      <div class="game-wrap">
+        <iframe
+          id="gameFrame"
+          src="about:blank"
+          title="Interlande — Piesardzības kalns"
+          allow="autoplay; fullscreen"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
 
     <div class="progress-area">
@@ -748,9 +797,9 @@
   <footer class="site-footer">
     <div><strong>© 2026 CADET.LV Visas tiesības aizsargātas.</strong></div>
     <div>
-      Spēles “Ērgļa izaicinājums” saturs un oriģinālais resurss:
-      <a href="https://www.knab.gov.lv/lv/skoleniem-un-skolotajiem" target="_blank" rel="noopener noreferrer">
-        Korupcijas novēršanas un apkarošanas birojs (KNAB)
+      Spēles “Interlande — Piesardzības kalns” saturs un oriģinālais resurss:
+      <a href="https://beinternetawesome.withgoogle.com/lv_all/interland/mindful-mountain" target="_blank" rel="noopener noreferrer">
+        Google — Esi interneta izcilnieks
       </a>.
     </div>
   </footer>
@@ -765,7 +814,7 @@
      GALVENIE IESTATĪJUMI
      ============================================================ */
 
-  const GAME_URL = "https://info.knab.gov.lv/ergla-izaicinajums/";
+  const GAME_URL = "https://beinternetawesome.withgoogle.com/lv_all/interland/mindful-mountain";
 
   /*
     GOOGLE SHEETS / APPS SCRIPT:
@@ -777,8 +826,8 @@
   */
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlmLGVlat7ko0nr3U-Y761gIG2TkuxJ1vdr9khs_W116m_MUhZrYxosGVrDJCTiQ6k/exec";
 
-  const STORAGE_KEY = "erglaChallengeActiveSession_v1";
-  const COMPLETED_KEY = "erglaChallengeCompleted_v1";
+  const STORAGE_KEY = "interlandMindfulMountainActiveSession_v1";
+  const COMPLETED_KEY = "interlandMindfulMountainCompleted_v1";
 
   let session = null;
   let timerId = null;
@@ -926,6 +975,8 @@
 
     sendEventToServer({
       event:"START",
+      game:"INTERLAND_MINDFUL_MOUNTAIN",
+      gameTitle:"Interlande — Piesardzības kalns",
       sessionId:session.sessionId,
       firstName:session.firstName,
       lastName:session.lastName,
@@ -1064,6 +1115,8 @@
 
     receipt = {
       event:"FINISH",
+      game:"INTERLAND_MINDFUL_MOUNTAIN",
+      gameTitle:"Interlande — Piesardzības kalns",
       sessionId:session.sessionId,
       firstName:session.firstName,
       lastName:session.lastName,
@@ -1159,7 +1212,7 @@
 
     a.href = url;
     a.download =
-      "ergla-" +
+      "interland-piesardzibas-kalns-" +
       (safe.firstName + "-" + safe.lastName)
         .toLowerCase()
         .replace(/[^a-z0-9āčēģīķļņšūž-]+/gi,"-") +
@@ -1229,6 +1282,31 @@
     $("pasteZone").focus();
   }
 
+  async function toggleGameFullscreen(){
+    const shell = $("gameFullscreenShell");
+
+    try{
+      if (!document.fullscreenElement){
+        await shell.requestFullscreen();
+      }else{
+        await document.exitFullscreen();
+      }
+    }catch(err){
+      alert("Pilnekrāna režīmu šajā pārlūkā neizdevās ieslēgt.");
+      console.error("Fullscreen kļūda:", err);
+    }
+  }
+
+  function updateFullscreenButton(){
+    const btn = $("fullscreenBtn");
+    if (!btn) return;
+
+    btn.textContent = document.fullscreenElement
+      ? "✕ IZSLĒGT PILNEKRĀNU"
+      : "⛶ PILNEKRĀNA REŽĪMS";
+  }
+
+
   /* ============================================================
      NOTIKUMI
      ============================================================ */
@@ -1247,6 +1325,8 @@
 
   $("startBtn").addEventListener("click",startNewSession);
   $("resumeBtn").addEventListener("click",resumeSession);
+  $("fullscreenBtn").addEventListener("click",toggleGameFullscreen);
+  document.addEventListener("fullscreenchange",updateFullscreenButton);
 
   $("discardBtn").addEventListener("click",function(){
     if (confirm("Dzēst nepabeigto sesiju un sākt no jauna?")){
@@ -1301,14 +1381,9 @@
   $("downloadReceiptBtn").addEventListener("click",downloadReceipt);
 
   /*
-    Ja nākotnē KNAB spēle sāktu izmantot window.postMessage,
-    šo vietu var paplašināt automātiskai pabeigšanas noteikšanai.
-    Šobrīd mēs NEPAĻAUJAMIES uz šādu signālu.
+    Interland pabeigšanu automātiski nenosakām.
+    Skolēns pabeigšanu apstiprina ar ekrānuzņēmumu un pogu zem spēles.
   */
-  window.addEventListener("message",function(event){
-    if (event.origin !== "https://info.knab.gov.lv") return;
-    console.log("KNAB iframe message:", event.data);
-  });
 
   /*
     Ja lietotājs aizver lapu nepabeidzot, mēģinām reģistram
@@ -1320,6 +1395,8 @@
 
     const payload = {
       event:"ABANDON",
+      game:"INTERLAND_MINDFUL_MOUNTAIN",
+      gameTitle:"Interlande — Piesardzības kalns",
       sessionId:session.sessionId,
       firstName:session.firstName,
       lastName:session.lastName,
